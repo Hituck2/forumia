@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Forum with Videos</title>
+</head>
+<body>
+    <h1>Forum with Videos</h1>
+    
+    <!-- Form to submit comments -->
+    <form action="comments.php" method="POST">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required><br><br>
+        <label for="comment">Comment:</label><br>
+        <textarea id="comment" name="comment" rows="4" cols="50" required></textarea><br><br>
+        <input type="submit" value="Post Comment">
+    </form>
+
+    <h2>Comments</h2>
+    <div id="comments-section">
+        <?php include 'comments.php'; ?>
+    </div>
+
+</body>
+</html>
