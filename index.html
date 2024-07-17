@@ -1,70 +1,97 @@
-l
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Forumia</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
-            margin: 0;
-            padding: 0;
-        }
-        
-        .container {
-            max-width: 800px;
-            margin: 20px auto;
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-        }
-        
-        h1 {
-            text-align: center;
-        }
-        
-        form {
-            margin-bottom: 20px;
-        }
-        
-        label, textarea, button {
-            display: block;
-            margin-bottom: 10px;
-        }
-        
-        textarea {
-            width: 100%;
-            resize: vertical;
-        }
-        
-        .comments {
-            margin-top: 20px;
-            border-top: 1px solid #ccc;
-            padding-top: 10px;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shared Comments</title>
+  <style>
+    /* Basic CSS for styling */
+    body {
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+      margin: 20px;
+    }
+    .comment {
+      margin-bottom: 15px;
+      border-bottom: 1px solid #ccc;
+      padding-bottom: 10px;
+    }
+    .comment p {
+      margin: 5px 0;
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Welcome to Forumia</h1>
-        
-        <form action="submit_comment.php" method="POST">
-            <label for="username">Username:</label><br>
-            <input type="text" id="username" name="username" required><br>
-            
-            <label for="comment">Comment:</label><br>
-            <textarea id="comment" name="comment" rows="4" cols="50" required></textarea><br>
-            
-            <button type="submit">Post Comment</button>
-        </form>
-        
-        <div class="comments">
-            <?php include 'display_comments.php'; ?>
-        </div>
-    </div>
-</body>
-    </html>
-    
+  <h1>Shared Comments</h1>
+
+  <!-- Post a comment form -->
+  <h2>Post a Comment</h2>
+  <form id="commentForm">
+    <label for="comment">Your Comment:</label><br>
+    <textarea id="comment" name="comment" rows="4" cols="50" required></textarea><br><br>
+    <button type="submit">Post Comment</button>
+  </form>
+
+  <!-- Display shared comments -->
+  <h2>Comments</h2>
+  <div id="commentsContainer"></div>
+
+  <!-- JavaScript for handling comments -->
+  <script>
+    // Function to post a comment
+    document.getElementById('commentForm').addEventListener('submit', function(event) {
+      event.preventDefault();
+      const commentText = document.getElementById('comment').value;
+      if (commentText.trim() === '') {
+        alert('Please enter a comment.');
+        return;
+      }
+
+      // Create a unique ID for the comment (simulate server-side ID)
+      const commentId = new Date().getTime();
+
+      // Save the comment to localStorage
+      const commentData = {
+        id: commentId,
+        username: 'Guest', // Replace with actual username when authentication is implemented
+        comment: commentText,
+        timestamp: new Date().toLocaleString()
+      };
+
+      // Save comment to localStorage
+      const comments = JSON.parse(localStorage.getItem('comments')) || [];
+      comments.push(commentData);
+      localStorage.setItem('comments', JSON.stringify(comments));
+
+      // Display the comment immediately
+      displayComments();
+
+      // Clear the comment textarea
+      document.getElementById('comment').value = '';
+    });
+
+    // Function to display comments from localStorage
+    function displayComments() {
+      const commentsContainer = document.getElementById('commentsContainer');
+      commentsContainer.innerHTML = '';
+
+      const comments = JSON.parse(localStorage.getItem('comments')) || [];
+
+      comments.forEach(function(comment) {
+        const commentElement = document.createElement('div');
+        commentElement.classList.add('comment');
+        commentElement.innerHTML = `
+          <p><strong>${comment.username}</strong> - <em>${comment.timestamp}</em></p>
+          <p>${comment.comment}</p>
+        `;
+        commentsContainer.appendChild(commentElement);
+      });
+    }
+
+    // Initial display of comments
+    displayComments();
+  </script>
+
+    </body>
+</html>
+      
