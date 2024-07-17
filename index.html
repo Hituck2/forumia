@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Shared Comments</title>
+  <title>Paginated Comments</title>
   <style>
     /* Basic CSS for styling */
     body {
@@ -19,10 +19,16 @@
     .comment p {
       margin: 5px 0;
     }
+    .pagination {
+      margin-top: 20px;
+    }
+    .pagination button {
+      margin-right: 5px;
+    }
   </style>
 </head>
 <body>
-  <h1>Shared Comments</h1>
+  <h1>Paginated Comments</h1>
 
   <!-- Post a comment form -->
   <h2>Post a Comment</h2>
@@ -32,11 +38,17 @@
     <button type="submit">Post Comment</button>
   </form>
 
-  <!-- Display shared comments -->
+  <!-- Display comments -->
   <h2>Comments</h2>
   <div id="commentsContainer"></div>
 
-  <!-- JavaScript for handling comments -->
+  <!-- Pagination controls -->
+  <div class="pagination">
+    <button id="prevPageBtn" disabled>Previous Page</button>
+    <button id="nextPageBtn">Next Page</button>
+  </div>
+
+  <!-- JavaScript for handling comments and pagination -->
   <script>
     // Function to post a comment
     document.getElementById('commentForm').addEventListener('submit', function(event) {
@@ -64,20 +76,27 @@
       localStorage.setItem('comments', JSON.stringify(comments));
 
       // Display the comment immediately
-      displayComments();
-
+      displayComments(currentPage);
+      
       // Clear the comment textarea
       document.getElementById('comment').value = '';
     });
 
-    // Function to display comments from localStorage
-    function displayComments() {
+    // Function to display comments from localStorage based on pagination
+    let currentPage = 1;
+    const commentsPerPage = 20;
+
+    function displayComments(page) {
       const commentsContainer = document.getElementById('commentsContainer');
       commentsContainer.innerHTML = '';
 
       const comments = JSON.parse(localStorage.getItem('comments')) || [];
 
-      comments.forEach(function(comment) {
+      const startIndex = (page - 1) * commentsPerPage;
+      const endIndex = startIndex + commentsPerPage;
+      const paginatedComments = comments.slice(startIndex, endIndex);
+
+      paginatedComments.forEach(function(comment) {
         const commentElement = document.createElement('div');
         commentElement.classList.add('comment');
         commentElement.innerHTML = `
@@ -86,12 +105,33 @@
         `;
         commentsContainer.appendChild(commentElement);
       });
+
+      // Update pagination buttons based on current page
+      document.getElementById('prevPageBtn').disabled = (currentPage === 1);
+      document.getElementById('nextPageBtn').disabled = (endIndex >= comments.length);
     }
 
     // Initial display of comments
-    displayComments();
+    displayComments(currentPage);
+
+    // Pagination event listeners
+    document.getElementById('prevPageBtn').addEventListener('click', function() {
+      if (currentPage > 1) {
+        currentPage--;
+        displayComments(currentPage);
+      }
+    });
+
+    document.getElementById('nextPageBtn').addEventListener('click', function() {
+      const comments = JSON.parse(localStorage.getItem('comments')) || [];
+      const totalPages = Math.ceil(comments.length / commentsPerPage);
+      if (currentPage < totalPages) {
+        currentPage++;
+        displayComments(currentPage);
+      }
+    });
   </script>
 
-    </body>
-</html>
-      
+</body>
+    </html>
+  
