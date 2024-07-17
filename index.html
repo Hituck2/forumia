@@ -3,24 +3,67 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Forum with Videos</title>
+    <title>Forumia</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            text-align: center;
+        }
+        
+        form {
+            margin-bottom: 20px;
+        }
+        
+        label, textarea, button {
+            display: block;
+            margin-bottom: 10px;
+        }
+        
+        textarea {
+            width: 100%;
+            resize: vertical;
+        }
+        
+        .comments {
+            margin-top: 20px;
+            border-top: 1px solid #ccc;
+            padding-top: 10px;
+        }
+    </style>
 </head>
 <body>
-    <h1>Forum with Videos</h1>
-    
-    <!-- Form to submit comments -->
-    <form action="comments.php" method="POST">
-        <label for="username">Username:</label>
-        <input type="text" id="username" name="username" required><br><br>
-        <label for="comment">Comment:</label><br>
-        <textarea id="comment" name="comment" rows="4" cols="50" required></textarea><br><br>
-        <input type="submit" value="Post Comment">
-    </form>
-
-    <h2>Comments</h2>
-    <div id="comments-section">
-        <?php include 'comments.php'; ?>
+    <div class="container">
+        <h1>Welcome to Forumia</h1>
+        
+        <form action="submit_comment.php" method="POST">
+            <label for="username">Username:</label><br>
+            <input type="text" id="username" name="username" required><br>
+            
+            <label for="comment">Comment:</label><br>
+            <textarea id="comment" name="comment" rows="4" cols="50" required></textarea><br>
+            
+            <button type="submit">Post Comment</button>
+        </form>
+        
+        <div class="comments">
+            <?php include 'display_comments.php'; ?>
+        </div>
     </div>
-
 </body>
-</html>
+    </html>
+    
